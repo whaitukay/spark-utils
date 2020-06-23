@@ -1,9 +1,9 @@
-package whaitukay.utils
+package com.github.whaitukay.utils
 
+import com.github.whaitukay.utils.files.FileUtils
+import com.github.whaitukay.utils.zipper.ZipUtil
 import org.apache.hadoop.fs.Path
 import org.apache.spark.sql.DataFrame
-import whaitukay.utils.files.FileUtils
-import whaitukay.utils.zipper.ZipUtil
 
 object Util {
 

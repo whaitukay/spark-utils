@@ -1,12 +1,12 @@
-package whaitukay.utils.files
+package com.github.whaitukay.utils.files
 
 import java.net.URI
 
+import com.github.whaitukay.utils.SparkSessionWrapper
+import com.github.whaitukay.utils.zipper.ZipUtil
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, FileUtil, Path}
 import org.apache.spark.sql._
-import whaitukay.utils.SparkSessionWrapper
-import whaitukay.utils.zipper.ZipUtil
 
 import scala.collection.JavaConverters._
 

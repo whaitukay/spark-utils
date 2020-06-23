@@ -1,4 +1,4 @@
-package whaitukay.utils
+package com.github.whaitukay.utils
 
 import org.apache.spark.sql.SparkSession
 

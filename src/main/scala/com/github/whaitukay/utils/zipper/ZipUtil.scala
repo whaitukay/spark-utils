@@ -1,14 +1,14 @@
-package whaitukay.utils.zipper
+package com.github.whaitukay.utils.zipper
 
 import java.io.{File, FileInputStream, FileOutputStream, IOException}
 import java.net.URI
 
+import com.github.whaitukay.utils.SparkSessionWrapper
 import net.lingala.zip4j.io.outputstream.ZipOutputStream
 import net.lingala.zip4j.model.ZipParameters
 import net.lingala.zip4j.model.enums.CompressionMethod
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
-import whaitukay.utils.SparkSessionWrapper
 
 
 object ZipUtil extends SparkSessionWrapper{
