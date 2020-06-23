@@ -199,5 +199,7 @@ spark-warehouse/
 # For SBT
 .jvmopts
 
+# For Local Repo
+local-repo
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,spark,scala,sbt

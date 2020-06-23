@@ -1,10 +1,10 @@
-package com.zenaptix.utils
+package whaitukay.utils
 
 import org.apache.spark.sql.SparkSession
 
 trait SparkSessionWrapper {
 
-  val spark : SparkSession = SparkSession
+  val _internalSparkSession : SparkSession = SparkSession
     .builder()
     .getOrCreate()
 
