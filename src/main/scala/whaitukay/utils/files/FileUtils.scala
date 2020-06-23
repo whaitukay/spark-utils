@@ -1,13 +1,14 @@
-package whaitukay.utils
+package whaitukay.utils.files
 
-import org.apache.hadoop.conf.Configuration
-
-import org.apache.spark.sql._
-import org.apache.hadoop.fs.{FileSystem, FileUtil, Path}
 import java.net.URI
 
-import scala.collection.JavaConverters._
+import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.fs.{FileSystem, FileUtil, Path}
+import org.apache.spark.sql._
+import whaitukay.utils.SparkSessionWrapper
 import whaitukay.utils.zipper.ZipUtil
+
+import scala.collection.JavaConverters._
 
 object FileUtils extends SparkSessionWrapper {
 
@@ -70,10 +71,4 @@ object FileUtils extends SparkSessionWrapper {
     _internalSparkSession.sparkContext.hadoopConfiguration.set("mapreduce.fileoutputcommitter.marksuccessfuljobs", oldConf)
 
   }
-
-  //TODO: Zip a file (not really spark, but used on the platform)
-  def zipFile(inputFileName: String, outputFileName: String):Unit = {
-    ZipUtil.zipFile(inputFileName, outputFileName)
-  }
-
 }

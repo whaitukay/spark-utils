@@ -2,6 +2,8 @@ package whaitukay.utils
 
 import org.apache.hadoop.fs.Path
 import org.apache.spark.sql.DataFrame
+import whaitukay.utils.files.FileUtils
+import whaitukay.utils.zipper.ZipUtil
 
 object Util {
 
@@ -11,5 +13,7 @@ object Util {
 
   def writeMergedCsv(df:DataFrame,filename:String, delimiter:String = ",", overwrite: Boolean = true): Unit = FileUtils.writeMergedCsv(df, filename, delimiter, overwrite)
 
-  def zipFile(inputFile:String, outputFile:String): Unit = FileUtils.zipFile(inputFile,outputFile)
+  def zipFile(inputFile:String, outputFile:String): Unit = ZipUtil.zipFile(inputFile,outputFile)
+
+  //TODO: zipDirectory / zipFiles
 }
