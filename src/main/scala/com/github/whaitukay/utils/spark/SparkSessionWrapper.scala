@@ -8,5 +8,4 @@ trait SparkSessionWrapper {
     .builder()
     .getOrCreate()
 
-
 }

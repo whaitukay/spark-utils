@@ -12,7 +12,6 @@ import scala.collection.JavaConverters._
 
 object FileUtils extends SparkSessionWrapper {
 
-  //TODO: list files in directory
   def listPaths(path:String): Seq[Path] = {
     val hadoopConf: Configuration = _internalSparkSession.sparkContext.hadoopConfiguration
     val fileSystem: FileSystem = FileSystem.get( new URI(path), hadoopConf)
@@ -29,7 +28,6 @@ object FileUtils extends SparkSessionWrapper {
     fileNames
   }
 
-  //TODO: Write merged CSV
   def writeMergedCsv(df: DataFrame, outputFilename:String, delimiter: String = ",", overwrite: Boolean = true): Unit = {
     // setup
     val oldConf = _internalSparkSession.sparkContext.hadoopConfiguration.get("mapreduce.fileoutputcommitter.marksuccessfuljobs","false")
@@ -43,10 +41,11 @@ object FileUtils extends SparkSessionWrapper {
     val destFS = FileSystem.get(new URI(outputFilename), _internalSparkSession.sparkContext.hadoopConfiguration)
 
     // clean target path if overwrite = true
-    if (overwrite){
-      if (destFS.exists(new Path(outputFilename)))
+    if (overwrite && destFS.exists(new Path(outputFilename))) {
         destFS.delete(new Path(outputFilename), true)
-      else false
+    }
+    else if (!overwrite && destFS.exists(new Path(outputFilename))){
+      throw new Exception(s"Unable to save to $outputFilename. File already exists!")
     }
 
     // cast types of all columns to String
