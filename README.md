@@ -1,9 +1,8 @@
 # spark-utils
 [![](https://jitpack.io/v/whaitukay/spark-utils.svg)](https://jitpack.io/#whaitukay/spark-utils)
 
-I have create a spark-utils library on github that contains some commonly used functions.
-This will allow the devs to only have to call the library to use these functions, instead of having to add the boilerplate code everytime.
-Fixes or enhancements made to these functions can then also be captured in the library and propagated to all notes using it.
+This is a collection of uncommon functions that are commonly used in projects.  
+The aim of the library is to reduce boilerplate code across projects.
 
 ## Features
 The spark-utils library currently contains the following util functions:
