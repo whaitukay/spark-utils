@@ -3,7 +3,7 @@ package com.github.whaitukay.utils.zipper
 import java.io.{File, FileInputStream, FileOutputStream, IOException}
 import java.net.URI
 
-import com.github.whaitukay.utils.SparkSessionWrapper
+import com.github.whaitukay.utils.spark.SparkSessionWrapper
 import net.lingala.zip4j.io.outputstream.ZipOutputStream
 import net.lingala.zip4j.model.ZipParameters
 import net.lingala.zip4j.model.enums.CompressionMethod

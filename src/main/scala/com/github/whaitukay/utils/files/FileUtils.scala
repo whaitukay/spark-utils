@@ -2,7 +2,7 @@ package com.github.whaitukay.utils.files
 
 import java.net.URI
 
-import com.github.whaitukay.utils.SparkSessionWrapper
+import com.github.whaitukay.utils.spark.SparkSessionWrapper
 import com.github.whaitukay.utils.zipper.ZipUtil
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, FileUtil, Path}
