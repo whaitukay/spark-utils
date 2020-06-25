@@ -33,7 +33,7 @@ For now, this library needs to be added as a dependency at the start of the note
 %spark.dep
 z.reset()
 
-z.addRepo("jitty").url("https://jitpack.io")
+z.addRepo("jitpack").url("https://jitpack.io")
 z.load("com.github.whaitukay:spark-utils:0.1.1")
 ```
 
@@ -51,16 +51,16 @@ import com.github.whaitukay.utils.Util
 val df = ... //some dataframe that you have
 
 // Write DataFrame as a csv using defaults (comma-separated and overwrite)
-Util.writeMergedCsv(df, "s3a://mdp-analytics-data/some/output/path.csv")
+Util.writeMergedCsv(df, "/path/to/some/output/file")
 
 // Write DataFrame as a csv with a custom delimiter
-Util.writeMergedCsv(df, "s3a://mdp-analytics-data/some/output/path.csv", delimiter = "|")
+Util.writeMergedCsv(df, "/path/to/some/output/file", delimiter = "|")
 
 // Write DataFrame as a csv without overwrite (will fail if the file exists)
-Util.writeMergedCsv(df, "s3a://mdp-analytics-data/some/output/path.csv", overwrite = false)
+Util.writeMergedCsv(df, "/path/to/some/output/file", overwrite = false)
 
 // Write DataFrame as a csv with custom delimiter and without overwrite (will fail if the file exists)
-Util.writeMergedCsv(df, "s3a://mdp-analytics-data/some/output/path.csv", delimiter = "~", overwrite = false)
+Util.writeMergedCsv(df, "/path/to/some/output/file", delimiter = "~", overwrite = false)
 ```
 
 ### listFiles
@@ -73,7 +73,7 @@ It can be used as follows in a `%spark` paragraph
 %spark
 import com.github.whaitukay.utils.Util
 
-val path = "s3a://mdp-data-materialized/xds" //some path to list
+val path = "/path/to/list" //some path to list
 
 // List all the files (or directories) in the specified path
 val files = Util.listFiles(path)
@@ -91,18 +91,18 @@ It can be used as follows in a `%spark` paragraph
 %spark
 import com.github.whaitukay.utils.Util
 
-val inputPath = "s3a://mdp-analytics-data/samples/iris.csv"  //path to some file to be zipped
-val outputPath = "s3a://mdp-analytics-data/samples/iris.zip" //target path to save the zipped file
+val inputPath = "/path/to/some/input/file"  //path to some file to be zipped
+val outputPath = "/path/to/some/output/file" //target path to save the zipped file
 
-// Attempt to zip the file foudn at the inputPath, and save the zipped file at the outputPath
+// Attempt to zip the file found at the inputPath, and save the zipped file at the outputPath
 Util.zipFile(inputPath, outputPath)
 ```
 
-Note that the `zipFile` function will automatically add the ".zip" extention if it is not present in the outputPath.
+Note that the `zipFile` function will automatically add the ".zip" extension if it is not present in the outputPath.
 
 ## Notes to pySpark users
 Unfortunately my python-fu is not strong enough to create wrappers for you guys just yet.
-Luckily, since we are using the notebook, we can switch bewteen `%pyspark` and `%spark` and still use the same session.
+Luckily, since we are using the notebook, we can switch between `%pyspark` and `%spark` and still use the same session.
 
 This means that if you have created a view using `df.createOrReplaceTempView('my_pyspark_df')`, you can recall it using `spark.table("my_pyspark_df")`.
 
@@ -123,7 +123,7 @@ import com.github.whaitukay.utils.Util
 val df = spark.table("my_df")
 
 // Write DataFrame as a csv using defaults (comma-separated and overwrite)
-Util.writeMergedCsv(df, "s3a://mdp-analytics-data/some/output/path.csv")
+Util.writeMergedCsv(df, "/path/to/output/file")
 ```
 
 If any of you pythonistas would like to assist or contribute to creating wrappers, you are welcome to do so.
