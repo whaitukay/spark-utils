@@ -10,6 +10,8 @@ import net.lingala.zip4j.model.enums.CompressionMethod
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
 
+import scala.reflect.io.Directory
+
 
 object ZipUtil extends SparkSessionWrapper{
 
@@ -43,16 +45,20 @@ object ZipUtil extends SparkSessionWrapper{
     filesToAdd.map(f => f.delete())
   }
 
-  def zipFile(input:String, output:String):Unit = {
+  def zipFile(input:String, output:String, hdfsDir:String = "/workdir"):Unit = {
 
     val conf: Configuration = _internalSparkSession.sparkContext.hadoopConfiguration
     val fs: FileSystem = FileSystem.get( new URI(input), conf)
 
-    _internalSparkSession.sparkContext.getConf
+    //check if hdfsDir exists
 
-    val tmpDir: String = s"/workdir/tmp/${Math.round(Math.random()*1000)}/"
-    val tmpFilePath: String = s"${tmpDir}${Math.round(Math.random()*1000)}"
-    val tmpZipFilePath: String = s"${tmpDir}${Math.round(Math.random()*1000)}.zip"
+    val ts: String = (System.currentTimeMillis()/1000).toString
+    val tmpDir: String = s"$hdfsDir/zip_tmp/$ts/"
+
+    new Directory(new File(tmpDir)).createDirectory()
+
+    val tmpFilePath: String = s"${tmpDir}$ts"
+    val tmpZipFilePath: String = s"${tmpDir}$ts.zip"
     val tmpFile: File = new File(tmpFilePath)
     val tmpZipFile: File = new File(tmpZipFilePath)
     val outputFileNameWithExtension: String = if (output.endsWith(".zip")) output else output+".zip"
