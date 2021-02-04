@@ -57,7 +57,7 @@ object ZipUtil extends SparkSessionWrapper{
 
     new Directory(new File(tmpDir)).createDirectory()
 
-    val tmpFilePath: String = s"${tmpDir}$ts"
+    val tmpFilePath: String = s"${tmpDir}${new Path(input).getName}"
     val tmpZipFilePath: String = s"${tmpDir}$ts.zip"
     val tmpFile: File = new File(tmpFilePath)
     val tmpZipFile: File = new File(tmpZipFilePath)
