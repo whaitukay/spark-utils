@@ -11,7 +11,8 @@ object Util {
 
   def listFiles(path:String): Seq[String] = FileUtils.listFiles(path)
 
-  def writeMergedCsv(df:DataFrame,filename:String, delimiter:String = ",", overwrite: Boolean = true): Unit = FileUtils.writeMergedCsv(df, filename, delimiter, overwrite)
+  def writeMergedCsv(df:DataFrame,filename:String, delimiter:String = ",", overwrite: Boolean = true, ignoreQuotes: Boolean = true, ignoreEscapes: Boolean = true, charset: String = "utf8", options: Map[String, String] = Map()): Unit =
+    FileUtils.writeMergedCsv(df, filename, delimiter, overwrite, ignoreQuotes, ignoreEscapes,charset,options)
 
   def zipFile(inputFile:String, outputFile:String): Unit = ZipUtil.zipFile(inputFile,outputFile)
 

@@ -1,6 +1,6 @@
 name := "spark-utils"
 
-version := "0.1.2"
+version := "0.1.3"
 organization := "com.github.whaitukay"
 
 scalaVersion := "2.11.12"
