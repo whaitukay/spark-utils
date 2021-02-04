@@ -44,8 +44,6 @@ object FileUtils extends SparkSessionWrapper {
     if (ignoreQuotes) _options = _options ++ Map("quote" -> "")
     _options = _options ++ options
 
-    println(_options)
-
     // clean target path if overwrite = true
     if (overwrite && destFS.exists(new Path(outputFilename))) {
       destFS.delete(new Path(outputFilename), true)
