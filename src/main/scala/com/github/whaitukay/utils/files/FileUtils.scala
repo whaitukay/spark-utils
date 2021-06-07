@@ -44,11 +44,8 @@ object FileUtils extends SparkSessionWrapper {
     if (ignoreQuotes) _options = _options ++ Map("quote" -> "")
     _options = _options ++ options
 
-    // clean target path if overwrite = true
-    if (overwrite && destFS.exists(new Path(outputFilename))) {
-      destFS.delete(new Path(outputFilename), true)
-    }
-    else if (!overwrite && destFS.exists(new Path(outputFilename))) {
+    //check if file exists
+    if (!overwrite && destFS.exists(new Path(outputFilename))) {
       throw new Exception(s"Unable to save to $outputFilename. File already exists!")
     }
 
@@ -60,6 +57,11 @@ object FileUtils extends SparkSessionWrapper {
 
     // merge header names with data
     headerDF.union(dataDF).write.format("csv").mode("overwrite").options(_options).save(tmpDir)
+
+    // clean target path if overwrite = true
+    if (overwrite && destFS.exists(new Path(outputFilename))) {
+      destFS.delete(new Path(outputFilename), true)
+    }
 
     // use hadoop FileUtil to merge all partition csv files into a single file
     val success = FileUtil.copyMerge(sourceFS,
