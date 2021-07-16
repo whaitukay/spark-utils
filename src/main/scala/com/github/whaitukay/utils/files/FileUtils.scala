@@ -1,12 +1,12 @@
 package com.github.whaitukay.utils.files
 
 import java.net.URI
-
 import com.github.whaitukay.utils.spark.SparkSessionWrapper
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.{FileSystem, FileUtil, Path}
+import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.sql._
-
+import org.apache.hadoop.io.IOUtils
+import scala.util.Try
 import scala.collection.JavaConverters._
 
 object FileUtils extends SparkSessionWrapper {
@@ -25,6 +25,24 @@ object FileUtils extends SparkSessionWrapper {
     val fileNames = paths.map(_.toString)
 
     fileNames
+  }
+
+  def copyMerge(srcFS: FileSystem, srcDir: Path, dstFS: FileSystem, dstFile: Path, deleteSource: Boolean, conf: Configuration): Boolean = {
+    // Source path is expected to be a directory:
+    if (srcFS.getFileStatus(srcDir).isDirectory()) {
+      val outputFile = dstFS.create(dstFile)
+      Try {
+        srcFS.listStatus(srcDir).sortBy(_.getPath.getName).collect {
+            case status if status.isFile() =>
+              val inputFile = srcFS.open(status.getPath())
+              Try(IOUtils.copyBytes(inputFile, outputFile, conf, false))
+              inputFile.close()
+          }
+      }
+      outputFile.close()
+      if (deleteSource) srcFS.delete(srcDir, true) else true
+    }
+    else false
   }
 
   def writeMergedCsv(df: DataFrame, outputFilename: String, delimiter: String = ",", overwrite: Boolean = true, ignoreQuotes: Boolean = true, ignoreEscapes: Boolean = true, charset: String = "utf8", options: Map[String, String] = Map()): Unit = {
@@ -64,13 +82,12 @@ object FileUtils extends SparkSessionWrapper {
     }
 
     // use hadoop FileUtil to merge all partition csv files into a single file
-    val success = FileUtil.copyMerge(sourceFS,
+    val success = copyMerge(sourceFS,
       new Path(tmpDir),
       destFS,
       new Path(outputFilename),
       true,
-      _internalSparkSession.sparkContext.hadoopConfiguration,
-      null)
+      _internalSparkSession.sparkContext.hadoopConfiguration)
 
     // set conf back to original value
     _internalSparkSession.sparkContext.hadoopConfiguration.set("mapreduce.fileoutputcommitter.marksuccessfuljobs", oldConf)
