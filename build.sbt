@@ -1,13 +1,13 @@
 name := "spark-utils"
 
-version := "0.1.5"
+version := "0.2.0"
 
 organization := "com.github.whaitukay"
 
-scalaVersion := "2.11.12"
+scalaVersion := "2.12.12"
 
-val sparkVersion = "2.4.5"
-val hadoopVersion = "2.10.0"
+val sparkVersion = "3.1.2"
+val hadoopVersion = "3.2.2"
 val zip4jVersion = "2.6.0"
 
 
