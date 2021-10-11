@@ -1,6 +1,6 @@
 name := "spark-utils"
 
-version := "0.2.1"
+version := "0.2.1-SNAPSHOT"
 
 organization := "com.github.whaitukay"
 
@@ -24,6 +24,7 @@ val hadoop = Seq( "org.apache.hadoop" % "hadoop-aws" % hadoopVersion % "provided
 val misc = Seq( "net.lingala.zip4j" % "zip4j" % zip4jVersion)
 
 libraryDependencies ++= spark ++ hadoop ++ misc
+unmanagedResourceDirectories in Compile += file("/spark-utils/src/main/python")
 
 publishTo := Some(MavenCache("local-maven", file("local-repo/releases")))
 publishConfiguration := publishConfiguration.value.withOverwrite(true)
