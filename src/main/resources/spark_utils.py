@@ -1,10 +1,6 @@
 from pyspark import SparkContext
 
-# Create the SparkSession
-spark = SparkSession.builder.getOrCreate()
-
-# SparkContext from the SparkSession
-sc = spark._sc
+sc =SparkContext()
 
 def listFiles(filepath):
     return sc._jvm.com.github.whaitukay.utils.UtilWrapper.listFiles(filepath)
