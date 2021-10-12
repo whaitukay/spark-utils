@@ -6,3 +6,12 @@ sc=spark.sparkContext
 
 def listFiles(filepath):
     return sc._jvm.com.github.whaitukay.utils.UtilWrapper.listFiles(filepath)
+
+
+def writeMergedCsv(df, outputFilename, delimiter=',', overwrite=True, ignoreQuotes=True, ignoreEscapes=True, charset='utf8'):
+    jdf = df._jdf
+    return sc._jvm.com.github.waitukay.UtilsObjWrapper.writeMergedCsv(jdf, outputFilename, delimiter, overwrite, ignoreQuotes, ignoreEscapes, charset)
+
+
+def zipFile(input, output, hdfsDir='/workdir'):
+    return sc._jvm.com.github.waitukay.UtilsObjWrapper.zipFile(input, output, hdfsDir)
