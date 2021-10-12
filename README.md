@@ -42,7 +42,7 @@ Brief instructions on how to use the library
 
 ### writeMergedCsv
 The `writeMergedCsv` function is used to write a DataFrame to a single CSV file.
-It can be used as follows in a `%spark` paragraph
+It can be used as follows in a `%spark` and `%pyspark` paragraph
 
 ```scala
 %spark
@@ -63,11 +63,30 @@ Util.writeMergedCsv(df, "/path/to/some/output/file", overwrite = false)
 Util.writeMergedCsv(df, "/path/to/some/output/file", delimiter = "~", overwrite = false)
 ```
 
+```python
+%pyspark
+import spark_utils
+
+df = ... #some dataframe that you have
+
+# Write DataFrame as a csv using defaults (comma-separated and overwrite)
+spark_utils.writeMergedCsv(df, "/path/to/some/output/file")
+
+# Write DataFrame as a csv with a custom delimiter
+spark_utils.writeMergedCsv(df, "/path/to/some/output/file", delimiter = "|")
+
+# Write DataFrame as a csv without overwrite (will fail if the file exists)
+spark_utils.writeMergedCsv(df, "/path/to/some/output/file", overwrite = false)
+
+# Write DataFrame as a csv with custom delimiter and without overwrite (will fail if the file exists)
+spark_utils.writeMergedCsv(df, "/path/to/some/output/file", delimiter = "~", overwrite = false)
+```
+
 ### listFiles
 The `listFiles` function is used to list all the files (or directories) in a given path.
 This can be useful when wanting to read multiple files programatically.
 
-It can be used as follows in a `%spark` paragraph
+It can be used as follows in a `%spark` and `%pyspark` paragraph
 
 ```scala
 %spark
@@ -79,13 +98,23 @@ val path = "/path/to/list" //some path to list
 val files = Util.listFiles(path)
 ```
 
+```python
+%pyspark
+import spark_utils
+
+path = "/path/to/list" #some path to list
+
+# List all the files (or directories) in the specified path
+files = spark_utils.listFiles(path)
+```
+
 Note that the `listFiles` function returns a `Seq[String]` value.
 
 ### zipFile
 The `zipFile` function is used to add the file to a zip (deflate) archive.
 This can be useful when trying to save on bandwidth when shifting files from MDP to local.
 
-It can be used as follows in a `%spark` paragraph
+It can be used as follows in a `%spark` and `%pyspark` paragraph
 
 ```scala
 %spark
@@ -96,37 +125,26 @@ val outputPath = "/path/to/some/output/file" //target path to save the zipped fi
 
 // Attempt to zip the file found at the inputPath, and save the zipped file at the outputPath
 Util.zipFile(inputPath, outputPath)
+
+// Attempt to zip the file found at the inputPath, and save the zipped file at the outputPath through a specific temporary directory
+ZipUtil.zipFile(inputPath, outputPath, "/tmp")
 ```
-
-Note that the `zipFile` function will automatically add the ".zip" extension if it is not present in the outputPath.
-
-## Notes to pySpark users
-Unfortunately my python-fu is not strong enough to create wrappers for you guys just yet.
-Luckily, since we are using the notebook, we can switch between `%pyspark` and `%spark` and still use the same session.
-
-This means that if you have created a view using `df.createOrReplaceTempView('my_pyspark_df')`, you can recall it using `spark.table("my_pyspark_df")`.
-
-So as a work-around, you can do everything you need to do in pySpark, and when you require the utils, save the DataFrame as a temp view, and switch to scala spark.
 
 ```python
 %pyspark
+import spark_utils
 
-df = ... # some python df that you might have
+inputPath = "/path/to/some/input/file"  #path to some file to be zipped
+outputPath = "/path/to/some/output/file" #target path to save the zipped file
 
-df.createOrReplaceTempView('my_df')
+# Attempt to zip the file found at the inputPath, and save the zipped file at the outputPath
+spark_utils.zipFile(inputPath, outputPath)
+
+# Attempt to zip the file found at the inputPath, and save the zipped file at the outputPath through a specific temporary directory
+spark_utils.zipFile(inputPath, outputPath, "/tmp")
 ```
 
-```scala
-%spark
-import com.github.whaitukay.utils.Util
-
-val df = spark.table("my_df")
-
-// Write DataFrame as a csv using defaults (comma-separated and overwrite)
-Util.writeMergedCsv(df, "/path/to/output/file")
-```
-
-If any of you pythonistas would like to assist or contribute to creating wrappers, you are welcome to do so.
+Note that the `zipFile` function will automatically add the ".zip" extension if it is not present in the outputPath.
 
 ## Future Work
 Some work that is currently planned to be added includes:
