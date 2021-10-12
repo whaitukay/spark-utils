@@ -1,8 +1,7 @@
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
 
-spark = SparkSession.builder
-                    .getOrCreate()
+spark = SparkSession.builder.getOrCreate()
 sc=spark.sparkContext
 
 def listFiles(filepath):
