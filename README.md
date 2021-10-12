@@ -76,10 +76,10 @@ spark_utils.writeMergedCsv(df, "/path/to/some/output/file")
 spark_utils.writeMergedCsv(df, "/path/to/some/output/file", delimiter = "|")
 
 # Write DataFrame as a csv without overwrite (will fail if the file exists)
-spark_utils.writeMergedCsv(df, "/path/to/some/output/file", overwrite = false)
+spark_utils.writeMergedCsv(df, "/path/to/some/output/file", overwrite = False)
 
 # Write DataFrame as a csv with custom delimiter and without overwrite (will fail if the file exists)
-spark_utils.writeMergedCsv(df, "/path/to/some/output/file", delimiter = "~", overwrite = false)
+spark_utils.writeMergedCsv(df, "/path/to/some/output/file", delimiter = "~", overwrite = False)
 ```
 
 ### listFiles
@@ -126,6 +126,7 @@ val outputPath = "/path/to/some/output/file" //target path to save the zipped fi
 // Attempt to zip the file found at the inputPath, and save the zipped file at the outputPath
 Util.zipFile(inputPath, outputPath)
 
+import com.github.whaitukay.utils.zipper.ZipUtil
 // Attempt to zip the file found at the inputPath, and save the zipped file at the outputPath through a specific temporary directory
 ZipUtil.zipFile(inputPath, outputPath, "/tmp")
 ```
