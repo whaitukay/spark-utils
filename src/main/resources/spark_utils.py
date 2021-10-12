@@ -10,8 +10,8 @@ def listFiles(filepath):
 
 def writeMergedCsv(df, outputFilename, delimiter=',', overwrite=True, ignoreQuotes=True, ignoreEscapes=True, charset='utf8'):
     jdf = df._jdf
-    return sc._jvm.com.github.waitukay.utils.UtilWrapper.writeMergedCsv(jdf, outputFilename, delimiter, overwrite, ignoreQuotes, ignoreEscapes, charset)
+    return sc._jvm.com.github.whaitukay.utils.UtilWrapper.writeMergedCsv(jdf, outputFilename, delimiter, overwrite, ignoreQuotes, ignoreEscapes, charset)
 
 
 def zipFile(input, output, hdfsDir='/workdir'):
-    return sc._jvm.com.github.waitukay.utils.UtilWrapper.zipFile(input, output, hdfsDir)
+    return sc._jvm.com.github.whaitukay.utils.UtilWrapper.zipFile(input, output, hdfsDir)
