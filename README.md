@@ -16,14 +16,14 @@ The spark-utils library currently contains the following util functions:
 ### Spark
 The library can be added as a dependency using spark config
 ```shell script
-./spark-submit --master ... --conf spark.jars.packages="com.github.whaitukay:spark-utils:0.1.1" --conf spark.jars.repositories="https://jitpack.io" ...
+./spark-submit --master ... --conf spark.jars.packages="com.github.whaitukay:spark-utils:0.2.2" --conf spark.jars.repositories="https://jitpack.io" ...
 ```
 
 ### SBT
 To add the library to your SBT project, add the following content to your `build.sbt` file.
 ```scala
 resolvers += "jitpack" at "https://jitpack.io"
-libraryDependencies += "com.github.whaitukay" % "spark-utils" % "0.1.1"	
+libraryDependencies += "com.github.whaitukay" % "spark-utils" % "0.2.2"	
 ```
 
 ### Zeppelin Notebook
@@ -34,7 +34,7 @@ For now, this library needs to be added as a dependency at the start of the note
 z.reset()
 
 z.addRepo("jitpack").url("https://jitpack.io")
-z.load("com.github.whaitukay:spark-utils:0.1.1")
+z.load("com.github.whaitukay:spark-utils:0.2.2")
 ```
 
 ## Usage
