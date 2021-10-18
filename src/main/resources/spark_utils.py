@@ -18,5 +18,5 @@ def zipFile(input, output, hdfsDir='/workdir'):
 
 
 def binaryJoin(arr, key='aggrkey', joinType='left'):
-    return sc._jvm.com.github.whaitukay.utils.UtilWrapper.binaryJoin(arr, key, joinType)
-
+    jdf_list = list(map(lambda x: x._jdf, arr))
+    return sc._jvm.com.github.whaitukay.utils.UtilWrapper.binaryJoin(jdf_list, key, joinType)

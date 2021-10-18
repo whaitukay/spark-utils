@@ -28,7 +28,7 @@ object UtilWrapper {
     ZipUtil.zipFile(input, output, hdfsDir)
   }
 
-  def binaryJoin(arr: Seq[org.apache.spark.sql.Dataset[Row]], key: String = "aggrkey", joinType: String = "left"): org.apache.spark.sql.Dataset[Row] =
-    Transforms.binaryJoin(arr, key, joinType)
+  def binaryJoin(arr: util.List[org.apache.spark.sql.Dataset[Row]], key: String = "aggrkey", joinType: String = "left"): org.apache.spark.sql.Dataset[Row] =
+    Transforms.binaryJoin(arr.asScala, key, joinType)
 
 }

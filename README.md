@@ -10,6 +10,7 @@ The spark-utils library currently contains the following util functions:
 * writeMergedCsv - A function for saving a DataFrame to a single CSV file.
 * listFiles - A function to list all the child files for a given path.
 * zipFile - A function that will zip (deflate) a given file.
+* binaryJoin - A function that joins dataframes together on a single key in a much more efficient manner.
 
 ## Installation
 
@@ -24,17 +25,6 @@ To add the library to your SBT project, add the following content to your `build
 ```scala
 resolvers += "jitpack" at "https://jitpack.io"
 libraryDependencies += "com.github.whaitukay" % "spark-utils" % "0.2.2"	
-```
-
-### Zeppelin Notebook
-For now, this library needs to be added as a dependency at the start of the note (before starting a session using the `%spark.dep` interpreter)
-
-```scala
-%spark.dep
-z.reset()
-
-z.addRepo("jitpack").url("https://jitpack.io")
-z.load("com.github.whaitukay:spark-utils:0.2.2")
 ```
 
 ## Usage
@@ -146,6 +136,28 @@ spark_utils.zipFile(inputPath, outputPath, "/tmp")
 ```
 
 Note that the `zipFile` function will automatically add the ".zip" extension if it is not present in the outputPath.
+
+### binaryJoin
+
+```scala
+%spark
+import com.github.whaitukay.utils.Util
+
+val dfSeq = Seq(df1, df2, ..., dfn) // A collection of dataframes
+
+// Joins all the dataframes together on the key "id" using a "left-join" approach
+val joinedDF = Util.binaryJoin(dfSeq, "id", "left")
+```
+
+```python
+%pyspark
+import spark_utils
+
+df_list = list(df1, df2, ..., dfn)  # A collection of dataframes
+
+# Joins all the dataframes together on the key "id" using a "left-join" approach
+joined_df = spark_utils.binaryJoin(df_list, 'id', 'left')
+```
 
 ## Future Work
 Some work that is currently planned to be added includes:
