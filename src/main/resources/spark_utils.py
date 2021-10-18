@@ -18,5 +18,7 @@ def zipFile(input, output, hdfsDir='/workdir'):
 
 
 def binaryJoin(arr, key='aggrkey', joinType='left'):
+    assert len(arr) > 0, "DataFrame list cannot be empty!"
     jdf_list = list(map(lambda x: x._jdf, arr))
-    return sc._jvm.com.github.whaitukay.utils.UtilWrapper.binaryJoin(jdf_list, key, joinType)
+    jdf = sc._jvm.com.github.whaitukay.utils.UtilWrapper.binaryJoin(jdf_list, key, joinType)
+    return DataFrame(jdf, df_list[0].sql_ctx)
