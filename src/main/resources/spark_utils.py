@@ -17,3 +17,6 @@ def zipFile(input, output, hdfsDir='/workdir'):
     return sc._jvm.com.github.whaitukay.utils.UtilWrapper.zipFile(input, output, hdfsDir)
 
 
+def binaryJoin(arr, key='aggrkey', joinType='left'):
+    return sc._jvm.com.github.whaitukay.utils.UtilWrapper.binaryJoin(arr, key, joinType)
+
