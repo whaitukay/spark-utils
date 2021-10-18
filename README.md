@@ -153,7 +153,7 @@ val joinedDF = Util.binaryJoin(dfSeq, "id", "left")
 %pyspark
 import spark_utils
 
-df_list = list(df1, df2, ..., dfn)  # A collection of dataframes
+df_list = list([df1, df2, ..., dfn])  # A collection of dataframes
 
 # Joins all the dataframes together on the key "id" using a "left-join" approach
 joined_df = spark_utils.binaryJoin(df_list, 'id', 'left')
