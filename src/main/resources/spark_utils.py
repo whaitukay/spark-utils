@@ -1,5 +1,5 @@
 from pyspark import SparkContext
-from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession, DataFrame
 
 spark = SparkSession._instantiatedSession
 sc = spark.sparkContext
@@ -17,3 +17,8 @@ def zipFile(input, output, hdfsDir='/workdir'):
     return sc._jvm.com.github.whaitukay.utils.UtilWrapper.zipFile(input, output, hdfsDir)
 
 
+def binaryJoin(arr, key='aggrkey', joinType='left'):
+    assert len(arr) > 0, "DataFrame list cannot be empty!"
+    jdf_list = list(map(lambda x: x._jdf, arr))
+    jdf = sc._jvm.com.github.whaitukay.utils.UtilWrapper.binaryJoin(jdf_list, key, joinType)
+    return DataFrame(jdf, arr[0].sql_ctx)
