@@ -100,19 +100,20 @@ files = spark_utils.listFiles(path)
 
 Note that the `listFiles` function returns a `Seq[String]` value.
 
-### deleteFileOrDir
-The `deleteFileOrDir` function is used to delete a file or directory in a given path.
+### delete
+The `delete` function is used to delete a file or directory in a given path.
 
 It can be used as follows in a `%spark` and `%pyspark` paragraph
 
 ```scala
-%spark
+% spark
+
 import com.github.whaitukay.utils.Util
 
 val path = "/path/to/file_or_directory" //some path to a file or directory
 
 // Delete the file or directory at the specified path
-val delFileOrDir = Util.deleteFileOrDir(path)
+val delFileOrDir = Util.delete(path)
 ```
 
 ```python
@@ -122,10 +123,10 @@ import spark_utils
 path = "/path/to/file_or_directoryt" #some path to a file or directory
 
 # Delete the file or directory at the specified path
-delFileOrDir = spark_utils.deleteFileOrDir(path)
+delFileOrDir = spark_utils.delete(path)
 ```
 
-Note that the `deleteFileOrDir` function returns a `Boolean` value if it was a success or an error if the path did not exist.
+Note that the `delete` function returns a `Boolean` value if it was a success or an error if the path did not exist.
 
 ### rename
 The `rename` function is used to rename a specific file in a given path.
@@ -156,23 +157,24 @@ renameFile = spark_utils.rename(inputPath, outputPath)
 
 Note that the `rename` function returns a `Boolean` value.
 
-### copyMoveDir
-The `copyMoveDir` function is used to copy or move files in directory to another location in hadoop.
+### copyMove
+The `copyMove` function is used to copy or move files in directory to another location in hadoop.
 
 It can be used as follows in a `%spark` and `%pyspark` paragraph
 
 ```scala
-%spark
+% spark
+
 import com.github.whaitukay.utils.Util
 
-val inputPath = "/path/to/some/directory"  //path to some files to be moved
+val inputPath = "/path/to/some/directory" //path to some files to be moved
 val outputPath = "/path/to/some/new/directory" //path to the new file location
 
 // Move files from one directory to another, keeping the original files
-val moveFiles = Util.copyMoveDir(inputPath, outputPath)
+val moveFiles = Util.copyMove(inputPath, outputPath)
 
 // Move files from one directory to another and deleting the original files
-val moveFiles = Util.copyMoveDir(inputPath, outputPath, deleteSrc = true)
+val moveFiles = Util.copyMove(inputPath, outputPath, deleteSrc = true)
 ```
 
 ```python
@@ -183,13 +185,13 @@ inputPath = "/path/to/some/directory"  #path to some files to be moved
 outputPath = "/path/to/some/new/directory" #path to the new file location
 
 # Move files from one directory to another, keeping the original files
-moveFiles = spark_utils.copyMoveDir(inputPath, outputPath)
+moveFiles = spark_utils.copyMove(inputPath, outputPath)
 
 # Move files from one directory to another and deleting the original files
-moveFiles = spark_utils.copyMoveDir(inputPath, outputPath, deleteSrc = True)
+moveFiles = spark_utils.copyMove(inputPath, outputPath, deleteSrc = True)
 ```
 
-Note that the `copyMoveDir` function returns a `Boolean` value.
+Note that the `copyMove` function returns a `Boolean` value.
 
 ### zipFile
 The `zipFile` function is used to add the file to a zip (deflate) archive.

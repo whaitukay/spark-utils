@@ -12,11 +12,11 @@ object Util {
 
   def listFiles(path:String): Seq[String] = FileUtils.listFiles(path)
 
-  def deleteFileOrDir(path: String): AnyVal = FileUtils.deleteFileOrDir(path)
+  def delete(path: String): AnyVal = FileUtils.delete(path)
 
   def rename(srcPath:String, dstPath: String): Boolean = FileUtils.rename(srcPath, dstPath)
 
-  def copyMoveDir(srcPath:String, dstPath: String, deleteSrc: Boolean = false): Boolean = FileUtils.copyMoveDir(srcPath, dstPath, deleteSrc)
+  def copyMove(srcPath:String, dstPath: String, deleteSrc: Boolean = false): Boolean = FileUtils.copyMove(srcPath, dstPath, deleteSrc)
 
   def writeMergedCsv(df:DataFrame,filename:String, delimiter:String = ",", overwrite: Boolean = true, ignoreQuotes: Boolean = true, ignoreEscapes: Boolean = true, charset: String = "utf8", options: Map[String, String] = Map()): Unit =
     FileUtils.writeMergedCsv(df, filename, delimiter, overwrite, ignoreQuotes, ignoreEscapes,charset,options)

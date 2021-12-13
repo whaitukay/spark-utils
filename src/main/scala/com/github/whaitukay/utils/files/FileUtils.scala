@@ -11,13 +11,13 @@ import scala.collection.JavaConverters._
 
 object FileUtils extends SparkSessionWrapper {
 
-  def fileSystem(path: String):FileSystem = {
+  def getFileSystem(path: String):FileSystem = {
     val hadoopConf: Configuration = _internalSparkSession.sparkContext.hadoopConfiguration
     new Path(path).getFileSystem(hadoopConf)
   }
 
   def listPaths(path: String): Seq[Path] = {
-    val fs = fileSystem(path)
+    val fs = getFileSystem(path)
     val listStatus = fs.listStatus(new Path(path))
     val filePaths = listStatus.map(_.getPath).toSeq
 
@@ -31,8 +31,8 @@ object FileUtils extends SparkSessionWrapper {
     fileNames
   }
 
-  def deleteFileOrDir(pathStr: String): AnyVal = {
-    val fs = fileSystem(pathStr)
+  def delete(pathStr: String): AnyVal = {
+    val fs = getFileSystem(pathStr)
     val path: Path = new Path(pathStr)
     val getStatus = fs.getFileStatus(path)
 
@@ -43,17 +43,17 @@ object FileUtils extends SparkSessionWrapper {
   def rename(src:String, dst: String): Boolean = {
     val srcPath = new Path(src)
     val dstPath = new Path(dst)
-    val fs = fileSystem(src)
+    val fs = getFileSystem(src)
 
     fs.rename(srcPath, dstPath)
   }
 
-  def copyMoveDir(src: String, dst:String, delSrc: Boolean = false) = {
+  def copyMove(src: String, dst:String, delSrc: Boolean = false) = {
     val srcPath = new Path(src)
     val dstPath = new Path(dst)
     val hadoopConf: Configuration = _internalSparkSession.sparkContext.hadoopConfiguration
-    val srcFS = fileSystem(src)
-    val dstFS = fileSystem(dst)
+    val srcFS = getFileSystem(src)
+    val dstFS = getFileSystem(dst)
 
     FileUtil.copy(srcFS,srcPath,dstFS,dstPath,delSrc,true,hadoopConf)
   }
@@ -85,8 +85,8 @@ object FileUtils extends SparkSessionWrapper {
     val tmpDir = outputFilename + "_tmp"
 
     // get filesytems
-    val sourceFS = fileSystem(tmpDir)
-    val destFS = fileSystem(outputFilename)
+    val sourceFS = getFileSystem(tmpDir)
+    val destFS = getFileSystem(outputFilename)
 
     var _options = Map("delimiter" -> delimiter, "header" -> "false", "charset" -> charset)
     if (ignoreEscapes) _options = _options ++ Map("escape" -> "")

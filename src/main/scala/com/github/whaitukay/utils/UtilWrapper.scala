@@ -16,16 +16,16 @@ object UtilWrapper {
     FileUtils.listFiles(filepath).asJava
   }
 
-  def deleteFileOrDir(filepath: String): AnyVal = {
-    FileUtils.deleteFileOrDir(filepath)
+  def delete(filepath: String): AnyVal = {
+    FileUtils.delete(filepath)
   }
 
   def rename(srcPath:String, dstPath: String): Boolean = {
     FileUtils.rename(srcPath, dstPath)
   }
 
-  def copyMoveDir(srcPath:String, dstPath: String, deleteSrc: Boolean): Boolean = {
-    FileUtils.copyMoveDir(srcPath, dstPath, deleteSrc)
+  def copyMove(srcPath:String, dstPath: String, deleteSrc: Boolean): Boolean = {
+    FileUtils.copyMove(srcPath, dstPath, deleteSrc)
   }
 
   def copyMerge(srcFS: FileSystem, srcDir: Path, dstFS: FileSystem, dstFile: Path, deleteSource: Boolean, conf: Configuration): Boolean = {
