@@ -8,6 +8,18 @@ def listFiles(filepath):
     return sc._jvm.com.github.whaitukay.utils.UtilWrapper.listFiles(filepath)
 
 
+def deleteFileOrDir(filepath):
+    return sc._jvm.com.github.whaitukay.utils.UtilWrapper.deleteFileOrDir(filepath)
+
+
+def rename(srcPath, dstPath):
+    return sc._jvm.com.github.whaitukay.utils.UtilWrapper.rename(srcPath, dstPath)
+
+
+def copyMoveDir(srcPath, dstPath, deleteSrc=False):
+    return sc._jvm.com.github.whaitukay.utils.UtilWrapper.copyMoveDir(srcPath, dstPath, deleteSrc)
+
+
 def writeMergedCsv(df, outputFilename, delimiter=',', overwrite=True, ignoreQuotes=True, ignoreEscapes=True, charset='utf8'):
     jdf = df._jdf
     return sc._jvm.com.github.whaitukay.utils.UtilWrapper.writeMergedCsv(jdf, outputFilename, delimiter, overwrite, ignoreQuotes, ignoreEscapes, charset)
