@@ -1,6 +1,5 @@
 package com.github.whaitukay.utils.files
 
-import java.net.URI
 import com.github.whaitukay.utils.spark.SparkSessionWrapper
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, FileUtil, Path}
@@ -14,7 +13,7 @@ object FileUtils extends SparkSessionWrapper {
 
   def fileSystem(path: String):FileSystem = {
     val hadoopConf: Configuration = _internalSparkSession.sparkContext.hadoopConfiguration
-    FileSystem.get(new URI(path), hadoopConf)
+    new Path(path).getFileSystem(hadoopConf)
   }
 
   def listPaths(path: String): Seq[Path] = {
@@ -86,8 +85,8 @@ object FileUtils extends SparkSessionWrapper {
     val tmpDir = outputFilename + "_tmp"
 
     // get filesytems
-    val sourceFS = fileSystem(tmpDir) //FileSystem.get(new URI(tmpDir), _internalSparkSession.sparkContext.hadoopConfiguration)
-    val destFS = fileSystem(outputFilename) //FileSystem.get(new URI(outputFilename), _internalSparkSession.sparkContext.hadoopConfiguration)
+    val sourceFS = fileSystem(tmpDir)
+    val destFS = fileSystem(outputFilename)
 
     var _options = Map("delimiter" -> delimiter, "header" -> "false", "charset" -> charset)
     if (ignoreEscapes) _options = _options ++ Map("escape" -> "")
