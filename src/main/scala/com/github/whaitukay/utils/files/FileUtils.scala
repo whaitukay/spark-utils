@@ -1,20 +1,24 @@
 package com.github.whaitukay.utils.files
 
-import java.net.URI
 import com.github.whaitukay.utils.spark.SparkSessionWrapper
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.{FileSystem, Path}
+import org.apache.hadoop.fs.{FileSystem, FileUtil, Path}
 import org.apache.spark.sql._
 import org.apache.hadoop.io.IOUtils
+
 import scala.util.Try
 import scala.collection.JavaConverters._
 
 object FileUtils extends SparkSessionWrapper {
 
-  def listPaths(path: String): Seq[Path] = {
+  def getFileSystem(path: String):FileSystem = {
     val hadoopConf: Configuration = _internalSparkSession.sparkContext.hadoopConfiguration
-    val fileSystem: FileSystem = FileSystem.get(new URI(path), hadoopConf)
-    val listStatus = fileSystem.listStatus(new Path(path))
+    new Path(path).getFileSystem(hadoopConf)
+  }
+
+  def listPaths(path: String): Seq[Path] = {
+    val fs = getFileSystem(path)
+    val listStatus = fs.listStatus(new Path(path))
     val filePaths = listStatus.map(_.getPath).toSeq
 
     filePaths
@@ -27,14 +31,41 @@ object FileUtils extends SparkSessionWrapper {
     fileNames
   }
 
+  def delete(pathStr: String): AnyVal = {
+    val fs = getFileSystem(pathStr)
+    val path: Path = new Path(pathStr)
+    val getStatus = fs.getFileStatus(path)
+
+    if(fs.exists(path) && (getStatus.isFile || getStatus.isDirectory))
+      fs.delete(path, true)
+  }
+
+  def rename(src:String, dst: String): Boolean = {
+    val srcPath = new Path(src)
+    val dstPath = new Path(dst)
+    val fs = getFileSystem(src)
+
+    fs.rename(srcPath, dstPath)
+  }
+
+  def copyMove(src: String, dst:String, delSrc: Boolean = false) = {
+    val srcPath = new Path(src)
+    val dstPath = new Path(dst)
+    val hadoopConf: Configuration = _internalSparkSession.sparkContext.hadoopConfiguration
+    val srcFS = getFileSystem(src)
+    val dstFS = getFileSystem(dst)
+
+    FileUtil.copy(srcFS,srcPath,dstFS,dstPath,delSrc,true,hadoopConf)
+  }
+
   def copyMerge(srcFS: FileSystem, srcDir: Path, dstFS: FileSystem, dstFile: Path, deleteSource: Boolean, conf: Configuration): Boolean = {
     // Source path is expected to be a directory:
-    if (srcFS.getFileStatus(srcDir).isDirectory()) {
+    if (srcFS.getFileStatus(srcDir).isDirectory) {
       val outputFile = dstFS.create(dstFile)
       Try {
         srcFS.listStatus(srcDir).sortBy(_.getPath.getName).collect {
-            case status if status.isFile() =>
-              val inputFile = srcFS.open(status.getPath())
+            case status if status.isFile =>
+              val inputFile = srcFS.open(status.getPath)
               Try(IOUtils.copyBytes(inputFile, outputFile, conf, false))
               inputFile.close()
           }
@@ -54,8 +85,8 @@ object FileUtils extends SparkSessionWrapper {
     val tmpDir = outputFilename + "_tmp"
 
     // get filesytems
-    val sourceFS = FileSystem.get(new URI(tmpDir), _internalSparkSession.sparkContext.hadoopConfiguration)
-    val destFS = FileSystem.get(new URI(outputFilename), _internalSparkSession.sparkContext.hadoopConfiguration)
+    val sourceFS = getFileSystem(tmpDir)
+    val destFS = getFileSystem(outputFilename)
 
     var _options = Map("delimiter" -> delimiter, "header" -> "false", "charset" -> charset)
     if (ignoreEscapes) _options = _options ++ Map("escape" -> "")
@@ -86,7 +117,7 @@ object FileUtils extends SparkSessionWrapper {
       new Path(tmpDir),
       destFS,
       new Path(outputFilename),
-      true,
+      deleteSource = true,
       _internalSparkSession.sparkContext.hadoopConfiguration)
 
     // set conf back to original value

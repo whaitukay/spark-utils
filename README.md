@@ -17,14 +17,14 @@ The spark-utils library currently contains the following util functions:
 ### Spark
 The library can be added as a dependency using spark config
 ```shell script
-./spark-submit --master ... --conf spark.jars.packages="com.github.whaitukay:spark-utils:0.2.2" --conf spark.jars.repositories="https://jitpack.io" ...
+./spark-submit --master ... --conf spark.jars.packages="com.github.whaitukay:spark-utils:0.2.3" --conf spark.jars.repositories="https://jitpack.io" ...
 ```
 
 ### SBT
 To add the library to your SBT project, add the following content to your `build.sbt` file.
 ```scala
 resolvers += "jitpack" at "https://jitpack.io"
-libraryDependencies += "com.github.whaitukay" % "spark-utils" % "0.2.2"	
+libraryDependencies += "com.github.whaitukay" % "spark-utils" % "0.2.3"	
 ```
 
 ## Usage
@@ -99,6 +99,99 @@ files = spark_utils.listFiles(path)
 ```
 
 Note that the `listFiles` function returns a `Seq[String]` value.
+
+### delete
+The `delete` function is used to delete a file or directory in a given path.
+
+It can be used as follows in a `%spark` and `%pyspark` paragraph
+
+```scala
+% spark
+
+import com.github.whaitukay.utils.Util
+
+val path = "/path/to/file_or_directory" //some path to a file or directory
+
+// Delete the file or directory at the specified path
+val delFileOrDir = Util.delete(path)
+```
+
+```python
+%pyspark
+import spark_utils
+
+path = "/path/to/file_or_directoryt" #some path to a file or directory
+
+# Delete the file or directory at the specified path
+delFileOrDir = spark_utils.delete(path)
+```
+
+Note that the `delete` function returns a `Boolean` value if it was a success or an error if the path did not exist.
+
+### rename
+The `rename` function is used to rename a specific file in a given path.
+
+It can be used as follows in a `%spark` and `%pyspark` paragraph
+
+```scala
+%spark
+import com.github.whaitukay.utils.Util
+
+val inputPath = "/path/to/some/file"  //path to some file to be renamed
+val outputPath = "/path/to/some/renamedfile" //renamed path of the file
+
+// Renames a file in the specified path
+val renameFile = Util.rename(inputPath, outputPath)
+```
+
+```python
+%pyspark
+import spark_utils
+
+inputPath = "/path/to/some/file"  #path to some file to be renamed
+outputPath = "/path/to/some/renamedfile" #renamed path of the file
+
+# Renames a file in the specified path
+renameFile = spark_utils.rename(inputPath, outputPath)
+```
+
+Note that the `rename` function returns a `Boolean` value.
+
+### copyMove
+The `copyMove` function is used to copy or move files in directory to another location in hadoop.
+
+It can be used as follows in a `%spark` and `%pyspark` paragraph
+
+```scala
+% spark
+
+import com.github.whaitukay.utils.Util
+
+val inputPath = "/path/to/some/directory" //path to some files to be moved
+val outputPath = "/path/to/some/new/directory" //path to the new file location
+
+// Move files from one directory to another, keeping the original files
+val moveFiles = Util.copyMove(inputPath, outputPath)
+
+// Move files from one directory to another and deleting the original files
+val moveFiles = Util.copyMove(inputPath, outputPath, deleteSrc = true)
+```
+
+```python
+%pyspark
+import spark_utils
+
+inputPath = "/path/to/some/directory"  #path to some files to be moved
+outputPath = "/path/to/some/new/directory" #path to the new file location
+
+# Move files from one directory to another, keeping the original files
+moveFiles = spark_utils.copyMove(inputPath, outputPath)
+
+# Move files from one directory to another and deleting the original files
+moveFiles = spark_utils.copyMove(inputPath, outputPath, deleteSrc = True)
+```
+
+Note that the `copyMove` function returns a `Boolean` value.
 
 ### zipFile
 The `zipFile` function is used to add the file to a zip (deflate) archive.
