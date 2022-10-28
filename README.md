@@ -17,7 +17,7 @@ The spark-utils library currently contains the following util functions:
 ### Spark
 The library can be added as a dependency using spark config
 ```shell script
-./spark-submit --master ... --conf spark.jars.packages="com.github.whaitukay:spark-utils:0.2.3" --conf spark.jars.repositories="https://jitpack.io" ...
+./spark-submit --master ... --conf spark.jars.packages="com.github.whaitukay:spark-utils:0.2.5" --conf spark.jars.repositories="https://jitpack.io" ...
 ```
 
 ### SBT
