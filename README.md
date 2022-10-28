@@ -24,7 +24,7 @@ The library can be added as a dependency using spark config
 To add the library to your SBT project, add the following content to your `build.sbt` file.
 ```scala
 resolvers += "jitpack" at "https://jitpack.io"
-libraryDependencies += "com.github.whaitukay" % "spark-utils" % "0.2.3"	
+libraryDependencies += "com.github.whaitukay" % "spark-utils" % "0.2.5"	
 ```
 
 ## Usage
