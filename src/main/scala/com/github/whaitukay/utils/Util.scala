@@ -12,6 +12,8 @@ object Util {
 
   def listFiles(path:String): Seq[String] = FileUtils.listFiles(path)
 
+  def getFolderInfo(path:String): DataFrame = FileUtils.getFolderInfo(path)
+
   def delete(path: String): AnyVal = FileUtils.delete(path)
 
   def rename(srcPath:String, dstPath: String): Boolean = FileUtils.rename(srcPath, dstPath)
@@ -22,6 +24,7 @@ object Util {
     FileUtils.writeMergedCsv(df, filename, delimiter, overwrite, ignoreQuotes, ignoreEscapes,charset,options)
 
   def zipFile(inputFile:String, outputFile:String): Unit = ZipUtil.zipFile(inputFile,outputFile)
+  def gzipFile(inputFile:String, outputFile:String): Unit = ZipUtil.gzipFile(inputFile,outputFile)
   //TODO: zipDirectory / zipFiles
 
   def binaryJoin(arr: Seq[org.apache.spark.sql.Dataset[Row]], key: String = "aggrkey", joinType: String = "left"): org.apache.spark.sql.Dataset[Row] =

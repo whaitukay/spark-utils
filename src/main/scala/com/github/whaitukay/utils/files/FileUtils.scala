@@ -3,15 +3,18 @@ package com.github.whaitukay.utils.files
 import com.github.whaitukay.utils.spark.SparkSessionWrapper
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, FileUtil, Path}
-import org.apache.spark.sql._
 import org.apache.hadoop.io.IOUtils
+import org.apache.spark.sql._
+import org.apache.spark.sql.functions.{col, to_timestamp}
+import org.apache.spark.sql.types.{BooleanType, StringType, StructField, StructType}
 
-import scala.util.Try
+import java.time.{Instant, LocalDateTime, ZoneId}
 import scala.collection.JavaConverters._
+import scala.util.Try
 
 object FileUtils extends SparkSessionWrapper {
 
-  def getFileSystem(path: String):FileSystem = {
+  def getFileSystem(path: String): FileSystem = {
     val hadoopConf: Configuration = _internalSparkSession.sparkContext.hadoopConfiguration
     new Path(path).getFileSystem(hadoopConf)
   }
@@ -31,16 +34,40 @@ object FileUtils extends SparkSessionWrapper {
     fileNames
   }
 
+  def getFolderInfo(path: String): DataFrame = {
+    val fs = getFileSystem(path)
+
+    val listStatus = fs.listStatus(new Path(path))
+    val schema = StructType(
+      Array(
+        StructField("file_name", StringType, true),
+        StructField("is_folder", BooleanType, true),
+        StructField("modification_time", StringType, true)
+      )
+    )
+
+    val filePaths = listStatus.map(_.getPath.getName).toSeq
+    val isDirFlag = listStatus.map(_.isDirectory).toSeq
+    val fileModTime = listStatus.map(_.getModificationTime).toSeq.map(date => LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault())).map(_.toString)
+
+    val dfInit = _internalSparkSession.createDataFrame(
+      _internalSparkSession.sparkContext.parallelize((filePaths, isDirFlag, fileModTime).zipped.toList.map(x => Row(x._1, x._2, x._3))),
+      schema
+    )
+
+    dfInit.withColumn("modification_time", to_timestamp(col("modification_time")))
+  }
+
   def delete(pathStr: String): AnyVal = {
     val fs = getFileSystem(pathStr)
     val path: Path = new Path(pathStr)
     val getStatus = fs.getFileStatus(path)
 
-    if(fs.exists(path) && (getStatus.isFile || getStatus.isDirectory))
+    if (fs.exists(path) && (getStatus.isFile || getStatus.isDirectory))
       fs.delete(path, true)
   }
 
-  def rename(src:String, dst: String): Boolean = {
+  def rename(src: String, dst: String): Boolean = {
     val srcPath = new Path(src)
     val dstPath = new Path(dst)
     val fs = getFileSystem(src)
@@ -48,14 +75,14 @@ object FileUtils extends SparkSessionWrapper {
     fs.rename(srcPath, dstPath)
   }
 
-  def copyMove(src: String, dst:String, delSrc: Boolean = false) = {
+  def copyMove(src: String, dst: String, delSrc: Boolean = false): Boolean = {
     val srcPath = new Path(src)
     val dstPath = new Path(dst)
     val hadoopConf: Configuration = _internalSparkSession.sparkContext.hadoopConfiguration
     val srcFS = getFileSystem(src)
     val dstFS = getFileSystem(dst)
 
-    FileUtil.copy(srcFS,srcPath,dstFS,dstPath,delSrc,true,hadoopConf)
+    FileUtil.copy(srcFS, srcPath, dstFS, dstPath, delSrc, true, hadoopConf)
   }
 
   def copyMerge(srcFS: FileSystem, srcDir: Path, dstFS: FileSystem, dstFile: Path, deleteSource: Boolean, conf: Configuration): Boolean = {
@@ -64,11 +91,11 @@ object FileUtils extends SparkSessionWrapper {
       val outputFile = dstFS.create(dstFile)
       Try {
         srcFS.listStatus(srcDir).sortBy(_.getPath.getName).collect {
-            case status if status.isFile =>
-              val inputFile = srcFS.open(status.getPath)
-              Try(IOUtils.copyBytes(inputFile, outputFile, conf, false))
-              inputFile.close()
-          }
+          case status if status.isFile =>
+            val inputFile = srcFS.open(status.getPath)
+            Try(IOUtils.copyBytes(inputFile, outputFile, conf, false))
+            inputFile.close()
+        }
       }
       outputFile.close()
       if (deleteSource) srcFS.delete(srcDir, true) else true
