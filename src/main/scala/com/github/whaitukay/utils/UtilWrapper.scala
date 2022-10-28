@@ -16,15 +16,19 @@ object UtilWrapper {
     FileUtils.listFiles(filepath).asJava
   }
 
+  def getFolderInfo(path: String): org.apache.spark.sql.Dataset[Row] = {
+    FileUtils.getFolderInfo(path)
+  }
+
   def delete(filepath: String): AnyVal = {
     FileUtils.delete(filepath)
   }
 
-  def rename(srcPath:String, dstPath: String): Boolean = {
+  def rename(srcPath: String, dstPath: String): Boolean = {
     FileUtils.rename(srcPath, dstPath)
   }
 
-  def copyMove(srcPath:String, dstPath: String, deleteSrc: Boolean): Boolean = {
+  def copyMove(srcPath: String, dstPath: String, deleteSrc: Boolean): Boolean = {
     FileUtils.copyMove(srcPath, dstPath, deleteSrc)
   }
 
@@ -36,8 +40,12 @@ object UtilWrapper {
     FileUtils.writeMergedCsv(jdf, outputFilename, delimiter, overwrite, ignoreQuotes, ignoreEscapes, charset)
   }
 
-  def zipFile(input:String, output:String, hdfsDir:String = "/workdir"): Unit = {
+  def zipFile(input: String, output: String, hdfsDir: String = "/workdir"): Unit = {
     ZipUtil.zipFile(input, output, hdfsDir)
+  }
+
+  def gzipFile(input: String, output: String, hdfsDir: String = "/workdir"): Unit = {
+    ZipUtil.gzipFile(input, output, hdfsDir)
   }
 
   def binaryJoin(arr: util.List[org.apache.spark.sql.Dataset[Row]], key: String = "aggrkey", joinType: String = "left"): org.apache.spark.sql.Dataset[Row] =
