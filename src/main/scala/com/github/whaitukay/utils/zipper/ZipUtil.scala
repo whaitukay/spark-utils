@@ -22,6 +22,11 @@ object ZipUtil extends SparkSessionWrapper{
     new ZipOutputStream(fos)
   }
 
+  def getFileSystem(path: String): FileSystem = {
+    val hadoopConf: Configuration = _internalSparkSession.sparkContext.hadoopConfiguration
+    new Path(path).getFileSystem(hadoopConf)
+  }
+
   private def zipOutputStream(outputZipFile: File,
                               filesToAdd: List[File]): Unit = {
     val zipParameters = new ZipParameters
@@ -49,7 +54,8 @@ object ZipUtil extends SparkSessionWrapper{
   def zipFile(input:String, output:String, hdfsDir:String = "/workdir"):Unit = {
 
     val conf: Configuration = _internalSparkSession.sparkContext.hadoopConfiguration
-    val fs: FileSystem = FileSystem.get( new URI(input), conf)
+    val inputFs: FileSystem = getFileSystem(input)
+    val outputFs: FileSystem = getFileSystem(output)
 
     //check if hdfsDir exists
 
@@ -66,7 +72,7 @@ object ZipUtil extends SparkSessionWrapper{
 
     try {
       println(s"Copying $input to temp directory")
-      fs.copyToLocalFile(new Path(input), new Path(tmpFilePath))
+      inputFs.copyToLocalFile(new Path(input), new Path(tmpFilePath))
       println(s"Done\n")
 
       println(s"Zipping $input")
@@ -77,7 +83,7 @@ object ZipUtil extends SparkSessionWrapper{
       println(s"Done\n")
 
       println(s"Uploading file to $outputFileNameWithExtension")
-      fs.copyFromLocalFile(true, new Path(tmpZipFilePath), new Path(outputFileNameWithExtension))
+      outputFs.copyFromLocalFile(true, new Path(tmpZipFilePath), new Path(outputFileNameWithExtension))
       println(s"Done\n")
 
     }
@@ -86,7 +92,7 @@ object ZipUtil extends SparkSessionWrapper{
     }
     finally {
       // cleanup
-      fs.delete(new Path(tmpDir),true)
+      inputFs.delete(new Path(tmpDir),true)
     }
   }
 
@@ -94,7 +100,8 @@ object ZipUtil extends SparkSessionWrapper{
   def gzipFile(input:String, output:String, hdfsDir:String = "/workdir") {
     /* Boilerplate */
     val conf: Configuration = _internalSparkSession.sparkContext.hadoopConfiguration
-    val fs: FileSystem = FileSystem.get( new URI(input), conf)
+    val inputFs: FileSystem = getFileSystem(input)
+    val outputFs: FileSystem = getFileSystem(output)
 
     //check if hdfsDir exists
     val ts: String = (System.currentTimeMillis()/1000).toString
@@ -110,7 +117,7 @@ object ZipUtil extends SparkSessionWrapper{
 
     try{
       println(s"Copying $input to temp directory")
-      fs.copyToLocalFile(new Path(input), new Path(tmpFilePath))
+      inputFs.copyToLocalFile(new Path(input), new Path(tmpFilePath))
       println(s"Done\n")
 
       println(s"Zipping $input")
@@ -130,7 +137,7 @@ object ZipUtil extends SparkSessionWrapper{
       println(s"Done\n")
 
       println(s"Uploading file to $outputFileNameWithExtension")
-      fs.copyFromLocalFile(true, new Path(tmpZipFilePath), new Path(outputFileNameWithExtension))
+      outputFs.copyFromLocalFile(true, new Path(tmpZipFilePath), new Path(outputFileNameWithExtension))
       println(s"Done\n")
 
     }
@@ -138,7 +145,7 @@ object ZipUtil extends SparkSessionWrapper{
       case ex: Exception => println(s"Error: $ex")
     }
     finally {
-      fs.delete(new Path(tmpDir),true)
+      inputFs.delete(new Path(tmpDir),true)
     }
   }
 }
