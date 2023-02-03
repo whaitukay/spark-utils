@@ -28,4 +28,3 @@ libraryDependencies ++= spark ++ hadoop ++ misc
 publishTo := Some(MavenCache("local-maven", file("local-repo/releases")))
 publishConfiguration := publishConfiguration.value.withOverwrite(true)
 publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
-
