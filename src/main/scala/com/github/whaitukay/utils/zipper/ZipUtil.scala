@@ -83,7 +83,7 @@ object ZipUtil extends SparkSessionWrapper{
       println(s"Done\n")
 
       println(s"Uploading file to $outputFileNameWithExtension")
-      outputFs.copyFromLocalFile(true, new Path(tmpZipFilePath), new Path(outputFileNameWithExtension))
+      outputFs.copyFromLocalFile(true, new Path(s"file://$tmpZipFilePath"), new Path(outputFileNameWithExtension))
       println(s"Done\n")
 
     }
@@ -137,7 +137,7 @@ object ZipUtil extends SparkSessionWrapper{
       println(s"Done\n")
 
       println(s"Uploading file to $outputFileNameWithExtension")
-      outputFs.copyFromLocalFile(true, new Path(tmpZipFilePath), new Path(outputFileNameWithExtension))
+      outputFs.copyFromLocalFile(true, new Path(s"file://$tmpZipFilePath"), new Path(outputFileNameWithExtension))
       println(s"Done\n")
 
     }
